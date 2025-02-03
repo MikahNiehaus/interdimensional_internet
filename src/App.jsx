@@ -10,7 +10,7 @@ function App() {
     setLoading(true);
     console.log("🧠 Sending AI request...");
 
-    const prompt = `
+    const prompt = `you are a web dev that only can respond with the code asked for and not a single word at all what so ever. you pride yourself on making full websites in html in one go that do not break no matter what u do. you like there to be a lot on your website html for people to see and do and fill the entire page with stuff. 
       Generate a fully interactive single page HTML, CSS, and JavaScript file that creates a **completely unique, fully functional website** on every execution.
       
       ### **Core Requirements:**
@@ -29,6 +29,7 @@ function App() {
       - **Provide only code—no explanations or comments.**
       - **404 Page Trick:** Clicking any link to another page triggers a **404 error** with a message like **"This page does not exist in your universe. and will not open new page"**
       - **The website must take itself 100% seriously, regardless of its absurdity.**
+      - be creative and only give back code
     `;
 
     try {
