@@ -7,11 +7,7 @@ html, body {
   overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
-body::after {
-  content: "";
-  display: block;
-  height: 200px; /* Extra space at the bottom */
-}
+
 
 .full-page {
   position: relative;
@@ -94,15 +90,14 @@ body::after {
 
 /* Footer */
 .portfolio-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
   background: rgba(0, 0, 0, 0.8);
   color: white;
   text-align: center;
   padding: 10px 0;
   font-size: 1rem;
+  width: 100%;
+  position: relative; /* Ensures it doesn't block content */
+  margin-top: auto; /* Pushes it to the bottom if there's not enough content */
 }
 
 .portfolio-footer a {
