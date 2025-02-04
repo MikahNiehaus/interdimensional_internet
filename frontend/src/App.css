@@ -1,23 +1,31 @@
-/* Full screen container */
+/* Full page and center content */
 .full-page {
   position: relative;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: black;
+  color: white;
+  font-family: Arial, sans-serif;
 }
 
-/* Button Styling */
+.center-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Futuristic Button */
 .generate-btn {
   padding: 15px 30px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   background: linear-gradient(45deg, #ff00ff, #00ffff);
   color: white;
   border: none;
   border-radius: 10px;
+  box-shadow: 0 0 10px cyan, 0 0 20px magenta;
   transition: transform 0.2s ease-in-out;
 }
 
@@ -25,48 +33,70 @@
   transform: scale(1.1);
 }
 
-/* Loading Overlay */
-.loading-overlay {
-  position: absolute;
-  top: 0;
+/* Navigation Bar */
+.nav-bar {
+  display: flex;
+  justify-content: flex-start;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 10px;
+  border-bottom: 1px solid cyan;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: cyan;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 15px;
+  padding: 5px 10px;
+}
+
+.nav-button:hover {
+  text-decoration: underline;
+}
+
+/* About Page */
+.about-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.about-page h1,
+.about-page h2 {
+  color: rgba(0, 255, 255, 0.753);
+}
+
+.about-page ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-page li {
+  margin: 10px 0;
+}
+
+/* Footer */
+.portfolio-footer {
+  position: fixed;
+  bottom: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
   background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  color: #fff;
-  font-family: "Courier New", monospace;
-  text-shadow: 0px 0px 10px cyan, 0px 0px 20px magenta;
-}
-
-/* Crash Overlay */
-.crash-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
   color: white;
-  font-weight: bold;
-  font-family: "Courier New", monospace;
-  text-shadow: 0px 0px 10px yellow, 0px 0px 20px red;
-  animation: glitch 0.5s infinite alternate;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 1rem;
 }
 
-/* Glitchy Effect */
-@keyframes glitch {
-  0% {
-    transform: translateX(-2px);
-  }
-  100% {
-    transform: translateX(2px);
-  }
+.portfolio-footer a {
+  color: cyan;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.portfolio-footer a:hover {
+  text-decoration: underline;
 }
