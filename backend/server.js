@@ -6,19 +6,7 @@ import "dotenv/config";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-import cors from "cors";
-
-const allowedOrigins = [
-  "http://localhost:5173", // Local frontend (for development)
-  "https://interdimensional-internet.pages.dev" // Cloudflare Pages URL
-];
-
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["POST"],
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 
 app.post("/api/generate", async (req, res) => {
