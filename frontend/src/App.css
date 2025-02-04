@@ -1,12 +1,14 @@
 /* Full page and center content */
 body,
-html {
+html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent scrollbars from appearing */
   width: 100%;
   height: 100%;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
+
 .full-page {
   position: relative;
   width: 100vw;
