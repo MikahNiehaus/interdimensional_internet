@@ -1,3 +1,6 @@
+
+ 
+
 import express from "express";
 import cors from "cors";
 import axios from "axios";
@@ -6,15 +9,70 @@ import "dotenv/config";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Debugging Log - Server Start
+console.log("🚀 Starting Backend...");
+
 // Improved CORS configuration
 const allowedOrigins = [
-  "http://localhost:5173", // Local development frontend
-  "https://interdimensional-internet.pages.dev" // Cloudflare Pages frontend
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://interdimensional-internet.pages.dev"
 ];
+const prompt = `
+Create a **fully functional, single-page HTML website** with **unique content and interactivity**.
+
+### **Requirements:**
+1. **Clean, Navigable UI**:
+   - Use a structured layout with menus, links, and sections.
+   - Apply **balanced colors, legible fonts, and intuitive design**.
+
+2. **Unique, Pre-Filled Content**:
+   - The site should appear as if it has existed for a while.
+   - Include **company details, user reviews, blog posts, or product descriptions**.
+   - **No placeholders or empty fields**—all sections must contain meaningful data.
+
+3. **Distinct Website Each Time**:
+   - **Every request must produce a completely different website**.
+   - Each version should have a **unique theme, purpose, and functionality**.
+
+4. **Absurd Yet Serious Execution**:
+   - The site’s content should be surreal but coherent.
+   - Example themes (**DO NOT reuse these**):  
+     - A **travel agency for time travelers**.  
+     - A **company offering impossible services**.  
+
+5. **Standalone Code**:
+   - The entire website must be built using **only HTML, CSS, and JavaScript**.
+   - **No external libraries, APIs, or frameworks**.
+
+### **Rules:**
+- **Return only the code**—no explanations or comments.
+- **Ensure content is pre-populated** (no blank fields).
+- **Confine all interactions to a single page**.
+- **The website should always be functional** regardless of user interaction.
+
+### **Output Format:**
+- Provide a **fully functional** HTML document with embedded CSS and JavaScript.
+- **No comments or additional text**—only valid code.
+`;
+console.log("🛠️ Allowed Origins:", allowedOrigins);
+
+app.use((req, res, next) => {
+  console.log(`📢 Incoming request: ${req.method} ${req.url}`);
+  next();
+});
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      console.log("🔎 Checking Origin:", origin);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("🚨 Blocked CORS Request from:", origin);
+        callback(new Error("CORS not allowed"));
+      }
+    },
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
@@ -23,66 +81,23 @@ app.use(
 
 app.use(express.json());
 
+// Debugging Log - Middleware Initialized
+console.log("✅ Express middleware initialized");
+
 // API Endpoint to generate HTML
 app.post("/api/generate", async (req, res) => {
-  console.log("🔗 Backend received request...");
-
-  const prompt = `
-Generate a fully interactive single-page HTML, simple CSS, and JavaScript file that creates a **completely unique, fully functional website** on every execution.
-
-### **Core Requirements:**
-1. **Structured and Professional UI:**
-   - The website must have a **clean, readable, and navigable layout** with intuitive menus, links, and sections.
-   - Use balanced colors, legible fonts, and an organized layout—avoid chaotic designs or visual clutter.
-   - The design must remain visually coherent and functional, regardless of user interactions.
-
-2. **Pre-Populated, Unique Content:**
-   - The website must look as if it has existed for a while, with **pre-filled data** that makes it feel like a complete website.
-   - Include content relevant to the theme (e.g., company details, user reviews, blog posts, or other populated sections).
-   - Do not include empty fields or placeholders; all sections should have meaningful data already populated.
-
-3. **Dynamic and Distinct Website Generation:**
-   - Each generated website must have a **unique concept, style, and set of features**.
-   - **Avoid repetition of features across websites.** For example:
-     - If one website includes a "post comments" feature, the next website must not have anything similar.
-     - New features could include company bios, interactive widgets, product catalogs, team member profiles, services offered, etc.
-   - Ensure the generated features and layouts are **original and logically consistent** within the website's theme.
-
-4. **Logical Absurdity with Serious Execution:**
-   - The website’s content and purpose should be bizarre yet coherent, written as if it takes itself seriously.
-   - Examples for reference (**DO NOT reuse or modify these**):
-     - A mission statement promoting strange but clearly articulated goals.
-     - User testimonials with humorous contradictions or surreal scenarios.
-
-5. **404 Error Twist:**
-   - Clicking any external or broken link must trigger a custom 404 message, such as:
-     **"This page does not exist in your universe. Please consult a local time-traveler for assistance."**
-
-6. **Complete Standalone Functionality:**
-   - The website must work fully with **only HTML, CSS, and JavaScript**—no external dependencies or frameworks.
-   - Ensure the code is self-contained and stable, so it **does not break** under any circumstances, regardless of user actions or modifications.
-
-### **Rules:**
-1. **Only reply with code.** No explanations, comments, or additional text are allowed.
-2. **Ensure every website has a unique concept, style, and features.**
-3. **Do NOT reuse or modify any examples provided in this prompt.**
-4. **Pre-fill all website content—no placeholders or empty fields.**
-5. **Every interaction or feature must remain confined to a single page.**
-6. **The code must be unbreakable—no matter how the website is used or altered.**
-7. **Under no circumstances are you allowed to include anything other than code.**
-
-### **Output Format:**
-- Provide the code for a complete, fully functional website using HTML, CSS, and JavaScript only.
-- Do not include comments, explanations, or additional text—strictly code only.
-`;
+  console.log("🔗 Backend received request at /api/generate");
+  console.log("📩 Request Body:", req.body);
+  
+  console.log("📝 Sending Prompt to OpenAI API:", prompt);
 
   try {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
         messages: [{ role: "system", content: prompt }],
-        max_tokens: 4000
+        max_tokens: 4096
       },
       {
         headers: {
@@ -92,6 +107,7 @@ Generate a fully interactive single-page HTML, simple CSS, and JavaScript file t
       }
     );
 
+    console.log("🤖 OpenAI API Response Received");
     let aiResponse = response.data.choices[0]?.message?.content || "";
 
     // Extract only the HTML part from the response
@@ -100,15 +116,22 @@ Generate a fully interactive single-page HTML, simple CSS, and JavaScript file t
       ? match[0]
       : "<h2>This universe has disconnected. Please try again.</h2>";
 
-    console.log("🤖 AI Response Parsed:", aiResponse);
+    console.log("📤 Sending HTML response to client");
     res.json({ html: aiResponse });
   } catch (error) {
     console.error("❌ AI Error:", error.message);
+    console.error("💡 Error Details:", error.response?.data || error);
     res.status(500).json({
       error: "AI request failed. Please try again.",
       details: error.response?.data || {}
     });
   }
+});
+
+// Catch-all 404 handler
+app.use((req, res) => {
+  console.warn("🚨 404 Not Found:", req.method, req.url);
+  res.status(404).json({ error: "Route not found" });
 });
 
 // Start the server

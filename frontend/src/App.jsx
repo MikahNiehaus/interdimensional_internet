@@ -4,7 +4,6 @@ import About from "./About"; // Import the About component
 import "./App.css";
 
 function App() {
-  const [htmlContent, setHtmlContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [crashed, setCrashed] = useState(false);
   const [showAbout, setShowAbout] = useState(false); // Toggle between pages
@@ -17,7 +16,15 @@ function App() {
     const prompt = `Generate an HTML page that looks like a portal into another dimension.`;
     const html = await fetchGeneratedHtml(prompt);
 
-    setHtmlContent(html);
+    if (html) {
+      // Create a Blob and open the HTML in a new tab
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank"); // Open in a new tab
+    } else {
+      setCrashed(true);
+    }
+
     setLoading(false);
   };
 
@@ -49,26 +56,14 @@ function App() {
               </div>
             </div>
           )}
-
-          {!htmlContent && (
-            <button
-              className="generate-btn"
-              onClick={fetchHtml}
-              disabled={loading}
-            >
-              {loading ? "Generating..." : "Generate Interdimensional Website"}
-            </button>
-          )}
-
-          {htmlContent && !crashed && (
-            <iframe
-              id="generated-iframe"
-              title="Interdimensional Website"
-              srcDoc={htmlContent}
-              sandbox="allow-scripts allow-same-origin"
-              style={{ width: "100vw", height: "100vh", border: "none" }}
-            />
-          )}
+        <h2>Allow popups, Website will open in new tab</h2>
+          <button
+            className="generate-btn"
+            onClick={fetchHtml}
+            disabled={loading}
+          >
+            {loading ? "Generating..." : "Generate Interdimensional Website"}
+          </button>
         </div>
       ) : (
         <About />
