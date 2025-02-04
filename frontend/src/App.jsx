@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { fetchGeneratedHtml } from "./api";
+import About from "./About"; // Import the About component
 import "./App.css";
 
 function App() {
@@ -34,7 +35,6 @@ function App() {
       </header>
 
       {!showAbout ? (
-        // Main Page Content
         <div className="center-content">
           {loading && (
             <div className="loading-overlay">
@@ -45,8 +45,7 @@ function App() {
           {crashed && (
             <div className="crash-overlay">
               <div className="crash-text">
-                💥 The interdimensional link has been severed! Reload to
-                reconnect.
+                💥 The interdimensional link has been severed! Reload to reconnect.
               </div>
             </div>
           )}
@@ -72,45 +71,9 @@ function App() {
           )}
         </div>
       ) : (
-        // About Page Content
-        <div className="about-page">
-          <h1>About the Interdimensional Internet</h1>
-          <p>
-            Welcome to the Interdimensional Internet project, a dynamic web
-            application built to explore the infinite possibilities of
-            interdimensional design! Using advanced technologies, this
-            application generates portals into the unknown, leveraging APIs and
-            AI-generated content.
-          </p>
-          <h2>About Me</h2>
-          <p>
-            Hi! I’m <strong>Mikah Niehaus</strong>, a Full Stack Software
-            Developer and Certified AI Developer with over six years of
-            experience building cloud-native, event-driven distributed systems.
-            I specialize in:
-          </p>
-          <ul>
-            <li>
-              Designing and developing scalable, high-performance web
-              applications.
-            </li>
-            <li>
-              Leveraging AI to build cutting-edge applications that push the
-              boundaries of technology.
-            </li>
-            <li>
-              Utilizing .NET Core, Kubernetes, and microservices to craft
-              robust backend systems.
-            </li>
-          </ul>
-          <p>
-            Check out my portfolio and contact me below for more exciting
-            projects!
-          </p>
-        </div>
+        <About />
       )}
 
-      {/* Footer */}
       <footer className="portfolio-footer">
         <p>
           Created by <strong>Mikah Niehaus</strong> |{" "}
