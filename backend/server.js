@@ -6,13 +6,28 @@ import "dotenv/config";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Improved CORS configuration
+const allowedOrigins = [
+  "http://localhost:5173", // Local development frontend
+  "https://interdimensional-internet.pages.dev" // Cloudflare Pages frontend
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
+
 app.use(express.json());
 
+// API Endpoint to generate HTML
 app.post("/api/generate", async (req, res) => {
-    console.log("🔗 Backend received request...");
+  console.log("🔗 Backend received request...");
 
-    const prompt = `
+  const prompt = `
 Generate a fully interactive single-page HTML, simple CSS, and JavaScript file that creates a **completely unique, fully functional website** on every execution.
 
 ### **Core Requirements:**
@@ -61,36 +76,42 @@ Generate a fully interactive single-page HTML, simple CSS, and JavaScript file t
 - Do not include comments, explanations, or additional text—strictly code only.
 `;
 
-    try {
-        const response = await axios.post(
-            "https://api.openai.com/v1/chat/completions",
-            {
-                model: "gpt-4",
-                messages: [{ role: "system", content: prompt }],
-                max_tokens: 4000,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4",
+        messages: [{ role: "system", content: prompt }],
+        max_tokens: 4000
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-        let aiResponse = response.data.choices[0]?.message?.content || "";
+    let aiResponse = response.data.choices[0]?.message?.content || "";
 
-        // Extract only the HTML part from the response
-        const match = aiResponse.match(/<html[\s\S]*<\/html>/i);
-        aiResponse = match ? match[0] : "<h2>This universe has disconnected. Please try again.</h2>";
+    // Extract only the HTML part from the response
+    const match = aiResponse.match(/<html[\s\S]*<\/html>/i);
+    aiResponse = match
+      ? match[0]
+      : "<h2>This universe has disconnected. Please try again.</h2>";
 
-        console.log("🤖 AI Response Parsed:", aiResponse);
-        res.json({ html: aiResponse });
-    } catch (error) {
-        console.error("❌ AI Error:", error.message);
-        res.status(500).json({ error: "AI request failed. Please try again." });
-    }
+    console.log("🤖 AI Response Parsed:", aiResponse);
+    res.json({ html: aiResponse });
+  } catch (error) {
+    console.error("❌ AI Error:", error.message);
+    res.status(500).json({
+      error: "AI request failed. Please try again.",
+      details: error.response?.data || {}
+    });
+  }
 });
 
+// Start the server
 app.listen(PORT, () => {
-    console.log(`🚀 Backend running on http://localhost:${PORT}`);
+  console.log(`🚀 Backend running on http://localhost:${PORT}`);
 });
