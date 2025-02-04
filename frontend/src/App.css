@@ -1,5 +1,3 @@
-/* Full page and center content */
-body,
 html, body {
   margin: 0;
   padding: 0;
@@ -7,6 +5,12 @@ html, body {
   height: 100%;
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+body::after {
+  content: "";
+  display: block;
+  height: 200px; /* Extra space at the bottom */
 }
 
 .full-page {
