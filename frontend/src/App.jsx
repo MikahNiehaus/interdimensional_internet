@@ -13,7 +13,6 @@ function App() {
         <nav className="nav-bar">
           <Link to="/" className="nav-button">🏠 Home</Link>
           <Link to="/about" className="nav-button">About</Link>
-          <Link to="/interdimensional-web-page" className="nav-button">Interdimensional Web Page</Link>
         </nav>
       </header>
 
