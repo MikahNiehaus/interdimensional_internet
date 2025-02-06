@@ -1,84 +1,162 @@
+/* Global Styling for a Professional Look */
 .interdimensional-web-page {
   font-family: 'Roboto', Arial, sans-serif; /* Modern font */
   line-height: 1.6;
   margin: 0;
-  padding: 0;
+  padding-left: 20px; /* Adds spacing to the left */
+  padding-right: 20px; /* Adds spacing to the right */
   color: #333; /* Neutral text color */
-  background-color: #f4f4f4; /* Light background for content sections */
+  background-color: #f8f9fa; /* Light gray for a modern look */
 }
 
-header {
+/* Header Styling */
+.header {
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
   font-weight: bold;
 }
 
-header h2 {
-  font-size: 1.5rem;
-  margin: 0;
-  font-weight: normal;
-  color: #e0e0e0; /* Subtle contrast for the subtitle */
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+  max-width: 80%; /* Ensures no overflow */
+  margin: 0 auto; /* Centers the text */
 }
 
+.header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  font-weight: normal;
+  color: #d0d0d0;
+}
+
+/* Main Content Layout */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Section Containers */
+.section-container {
+  max-width: 1200px; /* Ensures proper width for text */
+  margin: 0 auto; /* Centers the content */
+  padding: 20px; /* Adds space inside the container */
+  background: white; /* Clean white background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Grid Layout for Sections */
 .services-grid {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap; /* Makes grid responsive */
-  padding: 40px 20px;
-  background-color: white; /* Separate section visually */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  padding: 20px;
 }
 
 .service-card {
   flex: 1;
-  min-width: 250px;
-  max-width: 300px;
+  min-width: 280px;
+  max-width: 320px;
   padding: 20px;
+  margin: 10px; /* Adds space between cards */
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .service-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .service-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  color: #0044cc;
   margin-bottom: 10px;
-  color: #0044cc; /* Consistent blue for headings */
 }
 
 .service-card p {
-  font-size: 0.95rem;
-  color: #555; /* Subtle text color for content */
+  font-size: 1rem;
+  color: #555;
 }
 
+/* Testimonials Section */
+.testimonials-section {
+  padding: 30px;
+  background-color: #f1f1f1;
+  text-align: center;
+  font-style: italic;
+  border-radius: 10px;
+  margin: 20px auto;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 30px;
+  background: white;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section a {
+  color: #0044cc;
+  text-decoration: none;
+}
+
+.contact-section a:hover {
+  text-decoration: underline;
+}
+
+/* Footer Styling */
 .footer {
   text-align: center;
-  padding: 15px 10px;
-  background-color: #222; /* Dark footer */
-  color: #ddd; /* Softer white for footer text */
+  padding: 20px;
+  background-color: #222;
+  color: white;
   font-size: 0.9rem;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .footer a {
-  color: #00aaff; /* Subtle blue for links */
+  color: #00aaff;
   text-decoration: none;
-  margin: 0 5px;
-  transition: color 0.2s ease;
+  margin: 0 10px;
+  font-weight: bold;
 }
 
 .footer a:hover {
-  color: #ffaa00; /* Highlighted link color */
+  color: #ffaa00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .services-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .service-card {
+    max-width: 90%;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .header h2 {
+    font-size: 1.2rem;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
 }
