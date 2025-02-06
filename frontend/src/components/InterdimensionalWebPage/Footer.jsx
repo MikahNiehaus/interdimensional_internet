@@ -1,0 +1,12 @@
+
+import React from "react";
+
+function Footer() {
+  return (
+    <footer className="footer">
+      <p>&copy; 2025 Butt Insurance Inc. All Rights Reserved.</p>
+    </footer>
+  );
+}
+
+export default Footer;
