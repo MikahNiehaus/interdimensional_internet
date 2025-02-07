@@ -165,7 +165,7 @@ app.post("/api/fill", async (req, res) => {
     return res.status(400).json({ error: "Missing required parameters: context, tokens, or component" });
   }
 
-  const fillPrompt = `You are an AI expert web developer with the creativity and humer of the creators of Rick and Morty, dont mention Rick and morty though. Based on the concept '${context}', generate funny output for the '${component}' section, making it unique, clear, and fitting the theme.`;
+  const fillPrompt = `You are an AI expert web developer with the creativity and humer of the creators of Rick and Morty, dont mention Rick and morty though. Based on the concept '${context}', generate funny output for the '${component}' section, making it unique, clear, and fitting the theme. Include no additinal text exept what is requested respond with Text`;
 
   try {
     const response = await axios.post(

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "./Header";
-import Home from "./Home";
+import Home from "./InterdimensionalWebPageHome";
 import AboutSection from "./AboutSection";
 import ServicesSection from "./ServicesSection";
 import TestimonialsSection from "./TestimonialsSection";

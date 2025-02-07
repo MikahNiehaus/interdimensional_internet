@@ -1,6 +1,6 @@
 import React from "react";
 import "./Home.css"
-function Home({ onNavigate }) {
+function InterdimensionalWebPageHome({ onNavigate }) {
   return (
     <div className="home-container">
     
@@ -74,4 +74,4 @@ function Home({ onNavigate }) {
   );
 }
 
-export default Home;
+export default InterdimensionalWebPageHome;
