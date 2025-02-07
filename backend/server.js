@@ -1,103 +1,96 @@
-
- 
-
 import express from "express";
 import cors from "cors";
 import axios from "axios";
 import "dotenv/config";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Debugging Log - Server Start
-console.log("🚀 Starting Backend...");
-
-// Improved CORS configuration
+// CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "https://interdimensional-internet.pages.dev"
 ];
-const prompt = `
-Create a **fully functional, single-page HTML website** with **unique content and interactivity**.
 
-### **Requirements:**
-1. **Clean, Navigable UI**:
-   - Use a structured layout with menus, links, and sections.
-   - Apply **balanced colors, legible fonts, and intuitive design**.
-
-2. **Unique, Pre-Filled Content**:
-   - The site should appear as if it has existed for a while.
-   - Include **company details, user reviews, blog posts, or product descriptions**.
-   - **No placeholders or empty fields**—all sections must contain meaningful data.
-
-3. **Distinct Website Each Time**:
-   - **Every request must produce a completely different website**.
-   - Each version should have a **unique theme, purpose, and functionality**.
-
-4. **Absurd Yet Serious Execution**:
-   - The site’s content should be surreal but coherent.
-   - Example themes (**DO NOT reuse these**):  
-     - A **travel agency for time travelers**.  
-     - A **company offering impossible services**.  
-
-5. **Standalone Code**:
-   - The entire website must be built using **only HTML, CSS, and JavaScript**.
-   - **No external libraries, APIs, or frameworks**.
-
-### **Rules:**
-- **Return only the code**—no explanations or comments.
-- **Ensure content is pre-populated** (no blank fields).
-- **Confine all interactions to a single page**.
-- **The website should always be functional** regardless of user interaction.
-
-### **Output Format:**
-- Provide a **fully functional** HTML document with embedded CSS and JavaScript.
-- **No comments or additional text**—only valid code.
-`;
-console.log("🛠️ Allowed Origins:", allowedOrigins);
-
-app.use((req, res, next) => {
-  console.log(`📢 Incoming request: ${req.method} ${req.url}`);
-  next();
-});
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      console.log("🔎 Checking Origin:", origin);
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn("🚨 Blocked CORS Request from:", origin);
-        callback(new Error("CORS not allowed"));
-      }
-    },
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  })
-);
-
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
-// Debugging Log - Middleware Initialized
-console.log("✅ Express middleware initialized");
+// Swagger Configuration
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Interdimensional Internet API",
+      version: "1.0.0",
+      description: "API for generating surreal website concepts and filling website components using AI.",
+    },
+  },
+  apis: ["./server.js"], // Swagger will read docs from this file
+};
 
-// API Endpoint to generate HTML
-app.post("/api/generate", async (req, res) => {
-  console.log("🔗 Backend received request at /api/generate");
-  console.log("📩 Request Body:", req.body);
+// Initialize Swagger Docs
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+/**
+ * @swagger
+ * /api/context:
+ *   get:
+ *     summary: Generate a surreal website concept
+ *     description: Returns a short, unique, and absurdly professional website concept.
+ *     responses:
+ *       200:
+ *         description: Successfully generated a website concept.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 concept:
+ *                   type: string
+ *                   example: "A website where time travelers review historical events like Yelp."
+ *       500:
+ *         description: Internal server error.
+ */
+app.get("/api/context", async (req, res) => {
+  console.log("🔗 Received request at /api/context");
+  const conceptPrompt = `
+  ### **Task:**
+  Generate a **unique and surreal-yet-professional website concept** following these strict rules.
   
-  console.log("📝 Sending Prompt to OpenAI API:", prompt);
-
+  ---
+  
+  ### **Concept Guidelines:**
+  1. name: must be the header of the website
+  2. **Concept**: The website must be for an unusual, impossible, or absurd service that still sounds professional.
+  3. **Business Model**: Explain how this fictional company would make money.
+  
+  ---
+  
+  ### **Rules:**
+  - The concept must be **completely original** and **different on every request**.
+  - Keep the description **concise yet detailed** (one sentince max).
+  - Ensure the **website concept feels functional and viable**, even if it is absurd or imposibe.
+  - DO NOT include any greetings, explanations, or unnecessary text—**only the concept**.
+  - must be funny
+  ---
+  
+  ### **Output Format (Text Response)**
+  {
+    name, X, concept X, business_model X
+  }
+  `;
   try {
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "system", content: prompt }],
-        max_tokens: 4096
+        messages: [{ role: "system", content: conceptPrompt}],
+        max_tokens: 100,
+        temperature: 1.2
       },
       {
         headers: {
@@ -108,19 +101,13 @@ app.post("/api/generate", async (req, res) => {
     );
 
     console.log("🤖 OpenAI API Response Received");
-    let aiResponse = response.data.choices[0]?.message?.content || "";
 
-    // Extract only the HTML part from the response
-    const match = aiResponse.match(/<html[\s\S]*<\/html>/i);
-    aiResponse = match
-      ? match[0]
-      : "<h2>This universe has disconnected. Please try again.</h2>";
+    let aiResponse = response.data.choices[0]?.message?.content.trim() || "No concept generated.";
 
-    console.log("📤 Sending HTML response to client");
-    res.json({ html: aiResponse });
+    console.log("📤 Sending Website Concept to Client:", aiResponse);
+    res.json({ concept: aiResponse });
   } catch (error) {
     console.error("❌ AI Error:", error.message);
-    console.error("💡 Error Details:", error.response?.data || error);
     res.status(500).json({
       error: "AI request failed. Please try again.",
       details: error.response?.data || {}
@@ -128,10 +115,87 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
-// Catch-all 404 handler
-app.use((req, res) => {
-  console.warn("🚨 404 Not Found:", req.method, req.url);
-  res.status(404).json({ error: "Route not found" });
+/**
+ * @swagger
+ * /api/fill:
+ *   post:
+ *     summary: Generate AI-filled content for a website component
+ *     description: Takes a website context, a component name, and a token limit to generate precise AI-generated content.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               context:
+ *                 type: string
+ *                 example: "A time-travel agency website"
+ *               tokens:
+ *                 type: integer
+ *                 example: 100
+ *               component:
+ *                 type: string
+ *                 example: "About Us"
+ *     responses:
+ *       200:
+ *         description: Successfully generated AI content
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 component:
+ *                   type: string
+ *                   example: "About Us"
+ *                 content:
+ *                   type: string
+ *                   example: "At ChronoJourneys, we specialize in seamless vacations through time..."
+ *       400:
+ *         description: Bad request, missing parameters
+ *       500:
+ *         description: Internal server error
+ */
+app.post("/api/fill", async (req, res) => {
+  console.log("🔗 Received request at /api/fill");
+
+  const { context, tokens, component } = req.body;
+
+  if (!context || !tokens || !component) {
+    return res.status(400).json({ error: "Missing required parameters: context, tokens, or component" });
+  }
+
+  const fillPrompt = `You are an AI expert web developer with the creativity and humer of the creators of Rick and Morty, dont mention Rick and morty though. Based on the concept '${context}', generate funny output for the '${component}' section, making it unique, clear, and fitting the theme.`;
+
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4",
+        messages: [{ role: "system", content: fillPrompt }],
+        max_tokens: parseInt(tokens)
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("🤖 AI Response Received for /api/fill");
+
+    let aiResponse = response.data.choices[0]?.message?.content.trim() || "No content generated.";
+
+    console.log("📤 Sending AI-generated content to client:", aiResponse);
+    res.json({ component: component, content: aiResponse });
+  } catch (error) {
+    console.error("❌ AI Error:", error.message);
+    res.status(500).json({
+      error: "AI request failed. Please try again.",
+      details: error.response?.data || {}
+    });
+  }
 });
 
 // Start the server
